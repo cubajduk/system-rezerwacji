@@ -1,0 +1,32 @@
+services:
+  api:
+    build: .
+    restart: unless-stopped
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      DATABASE_URL: jdbc:postgresql://db:5432/fabryka_terapii
+      DATABASE_USERNAME: fabryka
+      DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
+      APP_SECURITY_OWNER_PASSWORD: ${OWNER_PASSWORD}
+      APP_SECURITY_RECEPTION_PASSWORD: ${RECEPTION_PASSWORD}
+    ports:
+      - "127.0.0.1:8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: fabryka_terapii
+      POSTGRES_USER: fabryka
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fabryka -d fabryka_terapii"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+volumes:
+  postgres_data:

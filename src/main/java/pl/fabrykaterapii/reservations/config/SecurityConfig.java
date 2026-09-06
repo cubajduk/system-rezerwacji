@@ -1,0 +1,8 @@
+package pl.fabrykaterapii.reservations.config;
+import org.springframework.beans.factory.annotation.Value; import org.springframework.context.annotation.*; import org.springframework.security.config.Customizer; import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity; import org.springframework.security.config.annotation.web.builders.HttpSecurity; import org.springframework.security.core.userdetails.*; import org.springframework.security.crypto.factory.PasswordEncoderFactories; import org.springframework.security.crypto.password.PasswordEncoder; import org.springframework.security.provisioning.InMemoryUserDetailsManager; import org.springframework.security.web.SecurityFilterChain;
+@Configuration @EnableMethodSecurity
+public class SecurityConfig {
+ @Bean SecurityFilterChain security(HttpSecurity http)throws Exception{return http.csrf(csrf->csrf.disable()).authorizeHttpRequests(a->a.requestMatchers("/actuator/health","/h2-console/**").permitAll().anyRequest().authenticated()).httpBasic(Customizer.withDefaults()).headers(h->h.frameOptions(f->f.sameOrigin())).build();}
+ @Bean UserDetailsService users(PasswordEncoder encoder,@Value("${app.security.owner-password:change-me}") String ownerPassword,@Value("${app.security.reception-password:change-me}") String receptionPassword){return new InMemoryUserDetailsManager(User.withUsername("owner@fabrykaterapii.pl").password(encoder.encode(ownerPassword)).roles("OWNER").build(),User.withUsername("recepcja@fabrykaterapii.pl").password(encoder.encode(receptionPassword)).roles("RECEPTION").build());}
+ @Bean PasswordEncoder passwordEncoder(){return PasswordEncoderFactories.createDelegatingPasswordEncoder();}
+}
