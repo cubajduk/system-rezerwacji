@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fabryka Terapii - Kalendarz</title>
+  <link rel="icon" type="image/png" sizes="64x64" href="/fabrykaterapii64.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/app.css?v=20260908-sidebar-v4">
+  <style>.appointment-dialog:not([open]){display:none!important}.appointment-dialog[open]{display:flex}.appointment-day-preview{display:flex;flex-direction:column}.appointment-preview-canvas{height:auto;flex:1;min-height:360px}.preview-room-switcher{display:flex;justify-content:center;align-items:center;gap:16px;padding:8px 0;font-size:12px}.preview-room-switcher button{width:26px;height:25px;border:1px solid #dfe7e5;border-radius:6px;background:#fff;color:#286a64;font-size:19px;line-height:1;cursor:pointer}.time-input-action{position:relative}.time-combo{min-width:116px;text-align:left;display:flex;justify-content:space-between;align-items:center}.time-combo-menu{position:absolute;z-index:30;top:calc(100% + 4px);left:0;display:grid;grid-template-columns:1fr 1fr;width:142px;height:184px;overflow:hidden;background:#fff;border:1px solid #dfe7e5;border-radius:8px;box-shadow:0 10px 24px #173d3630}.time-combo-menu[hidden]{display:none!important}.time-combo-menu>div{height:178px;min-height:0;overflow-y:scroll;overscroll-behavior:contain;scroll-behavior:smooth;padding:3px;scrollbar-width:thin}.time-combo-menu button{display:block;width:100%;border:0;background:transparent;border-radius:5px;padding:5px 8px;text-align:center;font:inherit;cursor:pointer}.time-combo-menu button:hover,.time-combo-menu button.is-selected{background:#e5f2ef;color:#08776c;font-weight:700}.preview-pending{opacity:.4;border:1px dashed rgba(255,255,255,.9);cursor:grab}.preview-pending-conflict{background:#bd554d!important}.visit-duration{display:flex;align-items:center;gap:8px}.visit-duration button{width:27px;height:25px;border:1px solid #dfe7e5;border-radius:6px;background:#fff;color:#286a64;font-size:16px;cursor:pointer}.visit-duration button:hover{background:#eef6f4}.recurrence-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}.recurrence-row label{margin:12px 0!important}.recurrence-row small{font-weight:400;color:#82908e}.recurrence-dialog{width:min(420px,calc(100% - 32px));padding:0;border:0;border-radius:16px;box-shadow:0 20px 60px #18352f55}.recurrence-dialog form{padding:24px}.recurrence-dialog h2{margin:0 0 18px}.custom-recurrence{border:1px solid #dfe7e5;border:1px solid #dfe7e5;border-radius:9px;padding:12px;display:grid;grid-template-columns:auto 64px 1fr;gap:10px;align-items:center;font-size:13px;color:#526262}.custom-recurrence input,.custom-recurrence select{margin:0!important;padding:7px!important}.custom-recurrence>#recurrenceDays{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:5px}.custom-recurrence>#recurrenceDays label{margin:0!important;padding:4px 6px;border:1px solid #dfe7e5;border-radius:6px;font-size:11px}.custom-recurrence>#recurrenceDays input{display:inline;width:auto;margin:0 3px 0 0!important}.custom-recurrence-end{grid-column:1/-1;display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:center}.custom-recurrence-end input{width:100%}</style>
+  <style>
+    /* Wyższa lista oraz stała, czytelna strzałka rozwijania czasu. */
+    .time-combo-menu { height: 250px; }
+    .time-combo-menu > div { height: 244px; }
+    .time-combo { position: relative; min-height: 38px; padding-right: 36px; font-size: 0; }
+    .time-combo > span { font-size: 15px; }
+    .time-combo::after { content: ''; position: absolute; right: 13px; top: 50%; width: 0; height: 0; transform: translateY(-35%); border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 7px solid #286a64; pointer-events: none; }
+    .appointment-preview-canvas, .appointment-preview-canvas .preview-visit { touch-action: none; }
+    .appointment-preview-canvas .preview-visit[style*="cursor"] { transition: none; }
+  </style>
+ </head>
+<body>
+  <main class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="/" aria-label="Fabryka Terapii, strona główna"><img class="brand-logo" src="/logo-fabryka-terapii.png" alt="Fabryka Terapii"></a>
+      <button class="primary-action" id="newAppointment"><span>＋</span> Nowa rezerwacja</button>
+      <section class="mini-calendar" aria-label="Wybór tygodnia">
+        <div class="mini-calendar-head"><strong id="miniCalendarTitle"></strong><span><button id="previousMiniMonth" type="button" aria-label="Poprzedni miesiąc">‹</button><button id="nextMiniMonth" type="button" aria-label="Następny miesiąc">›</button></span></div>
+        <div class="mini-calendar-weekdays"><span>P</span><span>W</span><span>Ś</span><span>C</span><span>P</span><span>S</span><span>N</span></div>
+        <div class="mini-calendar-days" id="miniCalendarDays"></div>
+      </section>
+      <nav aria-label="Główna nawigacja">
+        <a class="nav-item active" data-view="calendar" href="#calendar">▦ <span>Kalendarz</span></a>
+        <a class="nav-item" data-view="clients" href="#clients">♙ <span>Klienci</span></a>
+        <a class="nav-item" data-view="specialists" href="#specialists">◌ <span>Specjaliści</span></a>
+        <a class="nav-item" data-view="rooms" href="#rooms">⌂ <span>Gabinety</span></a>
+        <a class="nav-item" data-view="services" href="#services">☷ <span>Lista usług</span></a>
+        <a class="nav-item" data-view="payments" href="#payments">◫ <span>Płatności</span></a>
+      </nav>
+      <section class="today-card" aria-label="Dzisiejsze podsumowanie">
+        <p>DZISIAJ</p>
+        <strong id="todayCount">0</strong><span id="todayCountLabel">wizyt w grafiku</span>
+      </section>
+      <section id="sidebarSummary" class="sidebar-summary"><div class="today-card"><p>W TYM TYGODNIU</p><strong id="weekCount">0</strong><span id="weekCountLabel">wizyt</span></div><div class="today-card next-appointment-card"><p>NAJBLIŻSZA WIZYTA</p><div id="nextAppointment">Brak zaplanowanych wizyt</div><div class="next-visit-navigation"><button id="previousUpcoming" type="button" disabled aria-label="Poprzednia wizyta">‹</button><button id="nextUpcoming" type="button" disabled aria-label="Kolejna wizyta">›</button></div><small id="summaryError" role="status"></small></div></section>
+      <button type="button" class="today-card pending-card" id="pendingFilter" aria-pressed="false" hidden><span class="pending-card-label">DO POTWIERDZENIA</span><strong id="pendingCount">0</strong><span>wizyt w systemie</span></button>
+      <div class="sidebar-footer"><span class="online-dot"></span> System działa</div>
+    </aside>
+
+    <section class="workspace">
+      <header class="topbar">
+        <div class="mobile-brand">Fabryka Terapii</div>
+        <div class="calendar-controls">
+          <button class="icon-button" id="previousWeek" aria-label="Poprzedni tydzień">‹</button>
+          <button class="icon-button" id="nextWeek" aria-label="Następny tydzień">›</button>
+          <button class="today-button" id="goToday">Dzisiaj</button>
+          <div class="week-picker" id="weekPicker"><button class="week-picker-button" id="weekPickerButton" type="button" aria-expanded="false" aria-controls="weekPickerPanel"><span id="periodTitle">7–13 września 2026</span><span class="week-picker-caret" aria-hidden="true"></span></button><section class="week-picker-panel" id="weekPickerPanel" hidden><button class="week-picker-close" id="closeWeekPicker" type="button" aria-label="Zamknij wybór tygodnia">×</button><div class="picker-month"><div class="picker-heading"><strong id="pickerMonthTitle"></strong><span><button id="previousPickerMonth" type="button" aria-label="Poprzedni miesiąc">‹</button><button id="nextPickerMonth" type="button" aria-label="Następny miesiąc">›</button></span></div><div class="picker-weekdays"><span>P</span><span>W</span><span>Ś</span><span>C</span><span>P</span><span>S</span><span>N</span></div><div class="picker-days" id="pickerDays"></div></div><div class="picker-year"><div class="picker-heading"><strong id="pickerYearTitle"></strong><span><button id="previousPickerYear" type="button" aria-label="Poprzedni rok">‹</button><button id="nextPickerYear" type="button" aria-label="Następny rok">›</button></span></div><div class="picker-months" id="pickerMonths"></div><button class="picker-today" id="pickerToday" type="button">Dzisiaj</button></div></section></div>
+        </div>
+        <div class="top-actions">
+          
+          <select id="specialtyFilter" hidden><option value="all">Wszystkie specjalizacje</option></select>
+
+          <button class="icon-button settings-trigger" id="settingsButton" type="button" title="Ustawienia" aria-label="Ustawienia"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m9.5 3-.5 2-2 .9-1.9-.6-2.5 4.3 1.4 1.5v1.8l-1.4 1.5 2.5 4.3 1.9-.6 2 .9.5 2h5l.5-2 2-.9 1.9.6 2.5-4.3-1.4-1.5v-1.8l1.4-1.5-2.5-4.3-1.9.6-2-.9-.5-2Z"/><circle cx="12" cy="12" r="3.5"/></svg></button>
+          <div class="account-menu-wrap"><button class="account-button" id="accountButton" type="button" aria-expanded="false" aria-controls="accountMenu"><span class="avatar">FT</span><span id="accountName">Zaloguj się</span><b>⌄</b></button><div id="accountMenu" hidden><button id="logoutButton" type="button">Wyloguj</button></div></div>
+        </div>
+      </header>
+
+
+
+      <section class="calendar-wrap" id="calendar" aria-label="Kalendarz tygodniowy">
+        <div class="calendar-toolbar"><div class="calendar-mode"><label class="weekends-toggle"><input id="showWeekends" type="checkbox"> Pokazuj weekendy</label><select id="calendarMode" aria-label="Widok kalendarza"><option value="week">7 dni (tydzień)</option><option value="workweek" selected>5 dni (dni robocze)</option><option value="threeDays">3 dni</option><option value="twoDays">2 dni</option><option value="day">1 dzień</option></select></div><div><h2 id="calendarTitle" class="calendar-specialist-filter"><label for="specialistFilter">Grafik dla:</label><select id="specialistFilter" aria-label="Filtr specjalisty"><option value="all">Wszyscy specjaliści</option></select></h2><p id="calendarSubtitle">Zaloguj się, aby zobaczyć aktualne wizyty.</p></div></div>
+        <div class="calendar-scroll">
+          <div class="week-calendar" id="weekCalendar" role="grid" aria-label="Kalendarz wizyt"></div>
+        </div>
+        <div class="room-switcher" aria-label="Przełączanie gabinetów"><button class="icon-button" id="previousRoom" aria-label="Poprzedni gabinet">‹</button><select id="roomFilter" aria-label="Wybierz gabinet"><option value="all">Wszystkie gabinety</option></select><button class="icon-button" id="nextRoom" aria-label="Następny gabinet">›</button></div>
+        <div class="calendar-specialist-legend" id="calendarSpecialistLegend" aria-label="Legenda kolorów specjalistów"></div>
+      </section>
+      <section class="directory-view" id="directoryView" hidden aria-live="polite"></section>
+    </section>
+  </main>
+
+  <dialog id="settingsDialog" class="settings-dialog" aria-labelledby="settingsTitle">
+    <form id="settingsForm">
+      <header class="settings-header"><div><p class="eyebrow">PANEL PLACÓWKI</p><h2 id="settingsTitle">Ustawienia</h2><p>Twoja placówka. Twój sposób pracy.</p></div><button type="button" id="closeSettings" class="icon-button" aria-label="Zamknij ustawienia">×</button></header>
+      <div class="settings-layout"><nav id="settingsNav" aria-label="Kategorie ustawień"></nav><div id="settingsContent"></div></div>
+      <footer class="settings-footer"><span id="settingsMessage" role="status"></span><button type="button" class="today-button" id="cancelSettings">Anuluj</button><button type="submit" class="primary-action" id="saveSettings">Zapisz zmiany</button></footer>
+    </form>
+  </dialog>
+  <dialog id="loginDialog" class="dialog login-dialog">
+    <form method="dialog" id="loginForm">
+      <button class="dialog-close" type="button" data-close-dialog="loginDialog" aria-label="Zamknij">×</button>
+      <div class="dialog-brand"><span class="brand-mark">F</span></div>
+      <p class="eyebrow">PANEL REZERWACJI</p><h2>Witaj ponownie</h2><p class="dialog-intro">Zaloguj się, aby otworzyć grafik placówki.</p>
+      <label>E-mail<input id="username" type="email" autocomplete="username" placeholder="owner@fabrykaterapii.pl" required></label>
+      <label>Hasło<input id="password" type="password" autocomplete="current-password" placeholder="••••••••" required></label>
+      <p class="form-error" id="loginError" role="alert"></p>
+      <div class="dialog-actions"><button class="today-button" type="button" data-close-dialog="loginDialog">Anuluj</button><button class="primary-action" type="submit">Zaloguj się</button></div>
+      <p class="hint">Dane testowe: owner@fabrykaterapii.pl / change-me</p>
+    </form>
+  </dialog>
+
+  <dialog id="appointmentDialog" class="dialog appointment-dialog">
+    <form method="dialog" id="appointmentForm">
+      <button class="dialog-close" type="button" data-close-dialog="appointmentDialog" aria-label="Zamknij">×</button>
+      <p class="eyebrow" id="appointmentEyebrow">NOWA REZERWACJA</p><h2 id="appointmentTitle">Umów wizytę</h2>
+      <div class="form-grid">
+        <label class="appointment-specialist-field">Specjalista<select id="specialistId" required></select></label>
+        <label class="appointment-client-field">Klient<div class="client-picker"><input id="clientSearch" type="search" placeholder="Szukaj po imieniu, nazwisku lub telefonie" autocomplete="off"><select id="clientId" required></select><button id="editClientFromAppointment" type="button" title="Edytuj wybranego klienta">✎</button><button id="addClientFromAppointment" type="button" title="Dodaj klienta">＋</button></div></label>
+        <label>Gabinet<select id="roomId" required></select></label>
+        <label>Usługa<select id="serviceId"><option value="">Bez usługi</option></select></label>
+        <div class="visit-date-time"><label>Data wizyty<input id="appointmentDate" type="date" required></label><div class="visit-time-row"><label>Godzina rozpoczęcia<span class="time-input-action"><input id="startTime" type="time" required aria-label="Godzina rozpoczęcia"><button title="Wybór godziny nieedytowalny" hidden class="time-combo" id="startTimeButton" type="button"><span id="startTimeDisplay">--:--</span></button><div class="time-combo-menu" id="startTimeMenu" hidden><div id="startHourList"></div><div id="startMinuteList"></div></div><button id="firstAvailableTime" type="button" title="Pierwszy wolny termin">↑</button></span></label><label>Godzina zakończenia<span class="time-input-action"><input id="endTime" type="time" required aria-label="Godzina zakończenia"><button title="Wybór godziny nieedytowalny" hidden class="time-combo" id="endTimeButton" type="button"><span id="endTimeDisplay">--:--</span></button><div class="time-combo-menu" id="endTimeMenu" hidden><div id="endHourList"></div><div id="endMinuteList"></div></div><button id="lastAvailableTime" type="button" title="Ostatni wolny termin">↓</button></span></label></div><p class="visit-duration"><button id="shortenVisit" type="button" title="Skróć wizytę o 1 minutę">‹</button><span id="visitDuration">Czas trwania: —</span><button id="extendVisit" type="button" title="Wydłuż wizytę o 1 minutę">›</button></p></div>
+        <input id="startsAt" type="hidden"><input id="endsAt" type="hidden">
+        <label>Cena (zł)<span class="price-control"><input id="price" type="number" min="0" step="0.01" value="0" required><span><button type="button" id="priceUp" aria-label="Zwiększ cenę do kolejnej dziesiątki">▴</button><button type="button" id="priceDown" aria-label="Zmniejsz cenę do poprzedniej dziesiątki">▾</button></span></span></label>
+        <label class="checkbox-label"><input id="paid" type="checkbox"> Oznacz jako opłaconą</label>
+      </div>
+      <label class="checkbox-label confirmation-checkbox"><input id="confirmed" type="checkbox" checked> Wizyta potwierdzona</label>
+      <label>Notatka<textarea id="note" rows="2" placeholder="Opcjonalna notatka organizacyjna"></textarea></label>
+      <div class="recurrence-row"><label>Cykliczność<select id="recurrence"><option value="NONE">Nie powtarza się</option><option value="WEEKDAYS">Codziennie w dni robocze</option><option value="DAILY">Codziennie z weekendami</option><option value="WEEKLY">Co tydzień</option><option value="BIWEEKLY">Co drugi tydzień</option><option value="MONTHLY">Co miesiąc</option><option value="YEARLY">Co roku</option><option id="recurrenceCustomOption" value="CUSTOM">Niestandardowe…</option></select></label><label id="recurrenceEndWrap" hidden>Data zakończenia <small>(puste = 12 miesięcy)</small><input id="recurrenceEndDate" type="date"></label></div>
+      <p class="form-error" id="appointmentError" role="alert"></p>
+      <div class="dialog-actions"><button class="today-button delete-appointment" id="deleteAppointment" type="button" hidden>Usuń wizytę</button><button class="today-button" type="button" data-close-dialog="appointmentDialog">Anuluj</button><button class="primary-action" id="appointmentSubmit" type="submit">Zapisz wizytę</button></div>
+    </form><aside class="appointment-day-preview"><div class="appointment-preview-heading"><div><p class="eyebrow">PODGLĄD DNIA</p><strong id="appointmentPreviewTitle">Wybierz termin</strong></div><small>Przeciągnij wizytę lub jej krawędź</small></div><div class="appointment-preview-canvas" id="appointmentPreviewCanvas"></div><div class="preview-room-switcher"><button id="previousPreviewRoom" type="button" aria-label="Poprzedni gabinet">‹</button><strong id="previewRoomName">Gabinet</strong><button id="nextPreviewRoom" type="button" aria-label="Następny gabinet">›</button></div></aside>
+  </dialog>
+  <dialog id="customRecurrenceDialog" class="recurrence-dialog">
+    <form method="dialog" id="customRecurrenceForm">
+      <button class="dialog-close" type="button" id="cancelCustomRecurrence" aria-label="Zamknij">×</button>
+      <h2>Powtarzanie niestandardowe</h2>
+      <div class="custom-recurrence"><span>Powtarzaj co:</span><input id="recurrenceInterval" type="number" min="1" value="1" required><select id="recurrenceUnit"><option value="DAYS">dzień</option><option value="WEEKS" selected>tydzień</option><option value="MONTHS">miesiąc</option><option value="YEARS">rok</option></select><span>Powtarzaj w:</span><div id="recurrenceDays"><label><input type="checkbox" value="MONDAY"> Pon</label><label><input type="checkbox" value="TUESDAY"> Wt</label><label><input type="checkbox" value="WEDNESDAY"> Śr</label><label><input type="checkbox" value="THURSDAY"> Czw</label><label><input type="checkbox" value="FRIDAY"> Pt</label><label><input type="checkbox" value="SATURDAY"> Sob</label><label><input type="checkbox" value="SUNDAY"> Nd</label></div><label class="custom-recurrence-end"><input id="customRecurrenceNever" type="radio" name="customEnd" checked> Po 12 miesiącach (domyślnie)</label><label class="custom-recurrence-end"><input id="customRecurrenceOnDate" type="radio" name="customEnd"> W dniu <input id="customRecurrenceEndDate" type="date" disabled></label></div>
+      <div class="dialog-actions"><button class="today-button" id="cancelCustomRecurrenceButton" type="button">Anuluj</button><button class="primary-action" type="submit">Gotowe</button></div>
+    </form>
+  </dialog>
+  <dialog id="specialistDialog" class="dialog specialist-dialog">
+    <button class="dialog-close" type="button" data-close-dialog="specialistDialog" aria-label="Zamknij">×</button>
+    <form method="dialog" id="specialistForm">
+      <p class="eyebrow" id="specialistEyebrow">EDYCJA SPECJALISTY</p><h2 id="specialistTitle">Specjalista</h2>
+      <label>Imię<input id="editSpecialistFirstName" required></label>
+      <label>Nazwisko<input id="editSpecialistLastName" required></label>
+      <label>Specjalizacja<textarea id="editSpecialistSpecialization" rows="3" required></textarea></label>
+      <label>Dodaj specjalizację<div class="specialty-adder"><select id="specialtyChoice"><option value="Logopeda">Logopeda</option><option value="Neurologopeda">Neurologopeda</option><option value="Pedagog">Pedagog</option><option value="Psycholog">Psycholog</option><option value="Fizjoterapeuta">Fizjoterapeuta</option><option value="Terapeuta integracji sensorycznej">Terapeuta integracji sensorycznej</option><option value="Psychoterapeuta">Psychoterapeuta</option><option value="Terapeuta ręki">Terapeuta ręki</option></select><button class="today-button" id="addSpecialty" type="button">Dodaj</button></div></label>
+      <label>Kolor w kalendarzu<span class="color-control"><input id="editSpecialistColor" type="color" required><output id="specialistColorPreview"></output></span></label>
+      <label>Gabinet główny<select id="editSpecialistPrimaryRoom"><option value="">Brak preferencji</option></select></label>
+      <label>Gabinety alternatywne <small>(przeciągnij, aby zmienić kolejność)</small></label><div class="alternative-room-list" id="alternativeRoomList"></div><div class="specialty-adder"><select id="alternativeRoomChoice"></select><button class="today-button" id="addAlternativeRoom" type="button">Dodaj</button></div>
+      <p class="form-error" id="specialistError" role="alert"></p>
+      <div class="dialog-actions"><button class="today-button delete-appointment" id="deleteSpecialist" type="button" hidden>Usuń specjalistę</button><button class="today-button" type="button" data-close-dialog="specialistDialog">Anuluj</button><button class="primary-action" type="submit">Zapisz specjalistę</button></div>
+
+    </form>
+    <section class="schedule-editor" id="scheduleEditor" hidden>
+      <div class="schedule-heading"><div><p class="eyebrow">GRAFIK PRACY</p><h3>Godziny przyjmowania</h3><p>Pacjent może być umówiony wyłącznie w tych godzinach.</p></div><button class="edit-specialist" id="newSchedule" type="button">＋ Dodaj zakres</button></div>
+      <div id="scheduleList" class="schedule-list"></div>
+      <form id="scheduleForm" class="schedule-form" hidden>
+        <input id="scheduleId" type="hidden">
+        <div class="form-grid"><label>Od dnia<input id="scheduleStartDate" type="date" required></label><label>Do dnia <small>(opcjonalnie)</small><input id="scheduleEndDate" type="date"></label><label>Od godziny<input id="scheduleStartTime" type="time" value="08:00" required></label><label>Do godziny<input id="scheduleEndTime" type="time" value="18:00" required></label></div>
+        <label>Powtarzanie<select id="scheduleRecurrence"><option value="WEEKLY">Co tydzień</option><option value="BIWEEKLY">Co drugi tydzień</option><option value="MONTHLY">Co miesiąc</option><option value="ONCE">Jednorazowo</option></select></label>
+        <div class="days-choice" id="scheduleDays"><label><input value="MONDAY" type="checkbox" checked>Pon</label><label><input value="TUESDAY" type="checkbox" checked>Wt</label><label><input value="WEDNESDAY" type="checkbox" checked>Śr</label><label><input value="THURSDAY" type="checkbox" checked>Czw</label><label><input value="FRIDAY" type="checkbox" checked>Pt</label><label><input value="SATURDAY" type="checkbox">Sob</label><label><input value="SUNDAY" type="checkbox">Nd</label></div>
+        <p class="form-error" id="scheduleError" role="alert"></p><div class="schedule-actions"><button class="today-button" id="cancelSchedule" type="button">Anuluj</button><button class="primary-action" type="submit">Zapisz godziny</button></div>
+      </form>
+    </section>
+  </dialog>
+  <dialog id="roomDialog" class="dialog">
+    <form method="dialog" id="roomForm">
+      <button class="dialog-close" type="button" data-close-dialog="roomDialog" aria-label="Zamknij">×</button>
+      <p class="eyebrow" id="roomEyebrow">NOWY GABINET</p><h2 id="roomTitle">Dodaj gabinet</h2>
+      <label>Nazwa gabinetu<input id="editRoomName" placeholder="np. Gabinet 1" required></label>
+      <label>Krótka nazwa w kalendarzu<input id="editRoomShortName" maxlength="20" placeholder="np. G1" required></label>
+      <label>Wyposażenie<textarea id="editRoomEquipment" rows="4" placeholder="np. lustro, biurko, materiały terapeutyczne"></textarea></label>
+      <p class="form-error" id="roomError" role="alert"></p>
+      <div class="dialog-actions"><button class="today-button" type="button" data-close-dialog="roomDialog">Anuluj</button><button class="primary-action" type="submit">Zapisz gabinet</button></div>
+      <button class="danger-button" id="deleteRoom" type="button" hidden>Usuń gabinet</button>
+    </form>
+  </dialog>
+  <dialog id="clientDialog" class="dialog">
+    <form method="dialog" id="clientForm">
+      <button class="dialog-close" type="button" data-close-dialog="clientDialog" aria-label="Zamknij">×</button>
+      <p class="eyebrow" id="clientEyebrow">NOWY KLIENT</p><h2 id="clientTitle">Dodaj klienta</h2>
+      <div class="form-grid"><label>Imię<input id="editClientFirstName" required></label><label>Nazwisko<input id="editClientLastName" required></label><label>Telefon<input id="editClientPhone" type="tel" required></label><label>E-mail<input id="editClientEmail" type="email"></label><label>Data urodzenia<input id="editClientBirthDate" type="date"></label></div>
+      <label>Notatka organizacyjna<textarea id="editClientNote" rows="3" placeholder="Opcjonalna notatka"></textarea></label>
+      <label class="checkbox-label"><input id="editClientPersonalConsent" type="checkbox" checked required> Zgoda na przetwarzanie danych</label>
+      <label class="checkbox-label"><input id="editClientCommunicationConsent" type="checkbox"> Zgoda na kontakt</label>
+      <p class="form-error" id="clientError" role="alert"></p>
+      <div class="dialog-actions"><button class="today-button delete-appointment" id="deleteClient" type="button" hidden>Usuń klienta</button><button class="today-button" type="button" data-close-dialog="clientDialog">Anuluj</button><button class="primary-action" type="submit">Zapisz klienta</button></div>
+
+    </form>
+  </dialog>
+  <dialog id="serviceDialog" class="dialog">
+    <form id="serviceForm">
+      <button class="dialog-close" type="button" data-close-dialog="serviceDialog" aria-label="Zamknij">×</button>
+      <p class="eyebrow">LISTA USŁUG</p><h2 id="serviceTitle">Dodaj usługę</h2>
+      <label>Nazwa usługi<input id="editServiceName" maxlength="255" required></label>
+      <label>Krótki opis<textarea id="editServiceDescription" rows="3" maxlength="500"></textarea></label>
+      <label>Cena usługi (zł)<input id="editServicePrice" type="number" min="0" max="9999999999.99" step="0.01" required></label>
+      <label>Sugerowany czas (min)<input id="editServiceDuration" type="number" min="1" step="1"></label>
+      <label>Wymagane wyposażenie<input id="editServiceEquipment" maxlength="255"></label>
+      <p class="form-error" id="serviceError" role="alert"></p>
+      <div class="dialog-actions"><button class="today-button" type="button" data-close-dialog="serviceDialog">Anuluj</button><button class="primary-action" type="submit">Zapisz usługę</button></div>
+      <button class="danger-button" id="deleteService" type="button" hidden>Usuń usługę</button>
+    </form>
+  </dialog>
+  <script src="/app.js?v=20260908-sidebar-v4"></script>
+  <script>
+    document.getElementById('visitDuration').before(document.getElementById('extendVisit'));
+    const appointmentTooltips = {
+      startTimeButton: 'Wybór godziny nieedytowalny — rozpoczęcie',
+      endTimeButton: 'Wybór godziny nieedytowalny — zakończenie',
+      firstAvailableTime: 'Ustaw pierwszy wolny termin',
+      lastAvailableTime: 'Ustaw ostatni wolny termin',
+      shortenVisit: 'Skróć wizytę o 1 minutę',
+      extendVisit: 'Wydłuż wizytę o 1 minutę',
+      editClientFromAppointment: 'Edytuj wybranego klienta',
+      addClientFromAppointment: 'Dodaj klienta',
+      previousPreviewRoom: 'Pokaż poprzedni gabinet',
+      nextPreviewRoom: 'Pokaż następny gabinet',
+      appointmentSubmit: 'Zapisz wizytę lub zmiany'
+    };
+    Object.entries(appointmentTooltips).forEach(([id, title]) => document.getElementById(id).title = title);
+    document.querySelector('#appointmentDialog .dialog-close').title = 'Zamknij okno wizyty';
+    document.querySelector('#appointmentDialog [data-close-dialog="appointmentDialog"]').title = 'Anuluj bez zapisywania zmian';
+  </script>
+<dialog id="deleteSeriesDialog" class="dialog"><form method="dialog"><h2>Usuń wizytę cykliczną</h2><p id="deleteSeriesDetails" style="white-space:pre-line"></p><p>Czy usunąć tylko tę wizytę, czy tę i wszystkie kolejne wizyty w cyklu?</p><div class="dialog-actions"><button class="today-button" value="cancel">Anuluj</button><button class="today-button" value="one">Tylko tę wizytę</button><button class="primary-action" value="series">Tę i wszystkie kolejne</button></div></form></dialog></body>
+</html>

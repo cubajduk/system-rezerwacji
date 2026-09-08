@@ -1,0 +1,10 @@
+const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const source=fs.readFileSync('src/main/resources/static/app.js','utf8');
+function render(editingId=null){
+ const elements=new Map();const $=id=>{if(!elements.has(id))elements.set(id,{value:id==='specialistId'?'s':id==='roomId'?'r2':'',clientHeight:780});return elements.get(id)};
+ const visit={id:'a',specialistId:'s',roomId:'r1',clientId:'c',startsAt:'2026-09-08T08:00',endsAt:'2026-09-08T09:00',status:'CONFIRMED'};
+ const c={Date,$,state:{editingId,specialists:[],previewAppointments:[visit,{...visit,id:'b',startsAt:'2026-09-08T09:00',endsAt:'2026-09-08T10:00'},{...visit,id:'cancelled',status:'CANCELLED_BY_CLIENT',roomId:'cancelled'},{...visit,id:'other',specialistId:'other',roomId:'unrelated'}]},selectedPreviewDate:()=> '2026-09-08',calendarMinutes:()=>780,calendarOpening:()=>7,calendarClosing:()=>20,room:id=>id,esc:x=>x,client:()=> 'Klient',previewMinute:value=>{const d=new Date(value);return (d.getHours()-7)*60+d.getMinutes()},scheduleRangesForPreview:()=>[],updateVisitDuration(){},updateAvailableTimeButtons(){}};
+ vm.createContext(c);const start=source.lastIndexOf('function renderAppointmentDayPreview()');vm.runInContext(source.slice(start,source.indexOf('\n',start)),c);c.renderAppointmentDayPreview();return $('appointmentPreviewCanvas').innerHTML;
+}
+test('new reservation shows both busy intervals in another room, without cancelled or unrelated visits',()=>{const html=render();assert.equal((html.match(/Specjalista zajęty w gabinecie nr: r1/g)||[]).length,2);assert.ok(html.includes('08:00–09:00'));assert.ok(html.includes('09:00–10:00'));assert.ok(!html.includes('cancelled'));assert.ok(!html.includes('unrelated'));assert.ok(!html.includes('data-preview-appointment-id'))});
+test('editing does not show its old room as a specialist conflict',()=>{const html=render('a');assert.equal((html.match(/Specjalista zajęty w gabinecie nr: r1/g)||[]).length,1);assert.ok(html.includes('09:00–10:00'))});

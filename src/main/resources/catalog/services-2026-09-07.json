@@ -1,0 +1,312 @@
+{
+  "source": "https://fabrykaterapii.pl/cennik.html",
+  "retrievedAt": "2026-09-07",
+  "entries": [
+    {
+      "name": "Diagnoza neurologopedyczna",
+      "price": 270,
+      "duration": 55,
+      "description": "Diagnoza neurologopedyczna. Widełki: 270–300 zł; domyślnie dolna granica. Czas rezerwacji domyślny: 55 min (brak czasu w cenniku)."
+    },
+    {
+      "name": "Diagnoza logopedyczna",
+      "price": 240,
+      "duration": 55,
+      "description": "Diagnoza logopedyczna. Czas rezerwacji domyślny: 55 min (brak czasu w cenniku)."
+    },
+    {
+      "name": "Terapia neurologopedyczna 30 min",
+      "price": 110,
+      "duration": 30,
+      "description": "Indywidualna terapia neurologopedyczna."
+    },
+    {
+      "name": "Terapia neurologopedyczna 45 min",
+      "price": 160,
+      "duration": 45,
+      "description": "Indywidualna terapia neurologopedyczna."
+    },
+    {
+      "name": "Terapia neurologopedyczna 60 min",
+      "price": 180,
+      "duration": 60,
+      "description": "Indywidualna terapia neurologopedyczna."
+    },
+    {
+      "name": "Terapia logopedyczna 30 min",
+      "price": 90,
+      "duration": 30,
+      "description": "Indywidualna terapia logopedyczna."
+    },
+    {
+      "name": "Terapia logopedyczna 45 min",
+      "price": 140,
+      "duration": 45,
+      "description": "Indywidualna terapia logopedyczna."
+    },
+    {
+      "name": "Terapia logopedyczna 60 min",
+      "price": 160,
+      "duration": 60,
+      "description": "Indywidualna terapia logopedyczna."
+    },
+    {
+      "name": "Metoda Krakowska 30 min",
+      "price": 110,
+      "duration": 30,
+      "description": "Zajęcia prowadzone metodą krakowską."
+    },
+    {
+      "name": "Metoda Krakowska 45 min",
+      "price": 160,
+      "duration": 45,
+      "description": "Zajęcia prowadzone metodą krakowską."
+    },
+    {
+      "name": "Metoda Krakowska 60 min",
+      "price": 180,
+      "duration": 60,
+      "description": "Zajęcia prowadzone metodą krakowską."
+    },
+    {
+      "name": "Elektrostymulacja 15 min",
+      "price": 50,
+      "duration": 15,
+      "description": "Pojedyncze spotkanie elektrostymulacji."
+    },
+    {
+      "name": "Elektrostymulacja — cykl 10 spotkań",
+      "price": 550,
+      "duration": 55,
+      "description": "Cena za cały cykl 10 spotkań, nie za pojedynczą wizytę. Cennik nie podaje czasu wizyty w pakiecie. Czas rezerwacji domyślny: 55 min (brak czasu w cenniku)."
+    },
+    {
+      "name": "Konsultacja do terapii żywienia, neofobii",
+      "price": 250,
+      "duration": 55,
+      "description": "Konsultacja przed terapią. Widełki: 250–300 zł; domyślnie dolna granica. Czas rezerwacji domyślny: 55 min (brak czasu w cenniku)."
+    },
+    {
+      "name": "Terapia żywienia 60 min",
+      "price": 200,
+      "duration": 60,
+      "description": "Pojedyncze spotkanie terapii żywienia."
+    },
+    {
+      "name": "Diagnoza sprawności motorycznej",
+      "price": 250,
+      "duration": 55,
+      "description": "Diagnoza do terapii ręki. Czas rezerwacji domyślny: 55 min (brak czasu w cenniku)."
+    },
+    {
+      "name": "Terapia ręki 45 min",
+      "price": 150,
+      "duration": 45,
+      "description": "Zajęcia terapii ręki."
+    },
+    {
+      "name": "Terapia pedagogiczna 45 min",
+      "price": 150,
+      "duration": 45,
+      "description": "Indywidualna terapia pedagogiczna."
+    },
+    {
+      "name": "Terapia pedagogiczna 60 min",
+      "price": 170,
+      "duration": 60,
+      "description": "Indywidualna terapia pedagogiczna."
+    },
+    {
+      "name": "Testy w kierunku dysleksji",
+      "price": 600,
+      "duration": 55,
+      "description": "Testy z opinią na piśmie; cennik nie wskazuje osobnej dopłaty za opinię. Czas rezerwacji domyślny: 55 min (brak czasu w cenniku)."
+    },
+    {
+      "name": "Terapia psychologiczna 50 min",
+      "price": 200,
+      "duration": 50,
+      "description": "Spotkanie terapii psychologicznej."
+    },
+    {
+      "name": "Psychoterapia 50 min",
+      "price": 200,
+      "duration": 50,
+      "description": "Sesja psychoterapii."
+    },
+    {
+      "name": "Konsultacja psychologiczna",
+      "price": 250,
+      "duration": 55,
+      "description": "Konsultacja z psychologiem. Czas rezerwacji domyślny: 55 min (brak czasu w cenniku)."
+    },
+    {
+      "name": "Konsultacja psychoterapeutyczna",
+      "price": 250,
+      "duration": 55,
+      "description": "Konsultacja psychoterapeutyczna. Czas rezerwacji domyślny: 55 min (brak czasu w cenniku)."
+    },
+    {
+      "name": "Terapia rodzin",
+      "price": 300,
+      "duration": 55,
+      "description": "Cena za spotkanie terapii rodzin. Czas rezerwacji domyślny: 55 min (brak czasu w cenniku)."
+    },
+    {
+      "name": "TUS indywidualny 45 min",
+      "price": 200,
+      "duration": 45,
+      "description": "Indywidualny trening umiejętności społecznych."
+    },
+    {
+      "name": "TUS w parach 45 min",
+      "price": 260,
+      "duration": 45,
+      "description": "Cena za parę: 260 zł. Strona podaje też 120 zł od dziecka; wartości są niespójne. Przyjęto cenę za parę, do weryfikacji przed rozliczeniem."
+    },
+    {
+      "name": "TUS w grupie trzyosobowej — za dziecko",
+      "price": 120,
+      "duration": 55,
+      "description": "Cena za jedno dziecko w grupie trzyosobowej. Czas rezerwacji domyślny: 55 min (brak czasu w cenniku)."
+    },
+    {
+      "name": "TUS grupowy — abonament miesięczny",
+      "price": 350,
+      "duration": 55,
+      "description": "Cena za miesiąc zajęć, nie za pojedynczą wizytę. Czas rezerwacji domyślny: 55 min (brak czasu w cenniku)."
+    },
+    {
+      "name": "Taping — jedno oklejenie",
+      "price": 25,
+      "duration": 55,
+      "description": "Cena za jedno oklejenie. Czas rezerwacji domyślny: 55 min (brak czasu w cenniku)."
+    },
+    {
+      "name": "Instruktaż tejpowania",
+      "price": 250,
+      "duration": 55,
+      "description": "Cena za spotkanie instruktażowe. Czas rezerwacji domyślny: 55 min (brak czasu w cenniku)."
+    },
+    {
+      "name": "Diagnoza procesów sensorycznych — 3 spotkania",
+      "price": 550,
+      "duration": 55,
+      "description": "Cena za pakiet 3 spotkań, nie za pojedynczą wizytę. Czas rezerwacji domyślny: 55 min (brak czasu w cenniku)."
+    },
+    {
+      "name": "Terapia SI 50 min",
+      "price": 130,
+      "duration": 50,
+      "description": "Terapia integracji sensorycznej."
+    },
+    {
+      "name": "Terapia czaszkowo-krzyżowa 45 min",
+      "price": 150,
+      "duration": 45,
+      "description": "Sesja terapii czaszkowo-krzyżowej."
+    },
+    {
+      "name": "Konsultacja SI (jednorazowa)",
+      "price": 150,
+      "duration": 55,
+      "description": "Jednorazowa konsultacja. Widełki: 150–200 zł; domyślnie dolna granica. Czas rezerwacji domyślny: 55 min (brak czasu w cenniku)."
+    },
+    {
+      "name": "PNF 45 min",
+      "price": 130,
+      "duration": 45,
+      "description": "Zajęcia PNF."
+    },
+    {
+      "name": "Zajęcia korekcyjne 50 min",
+      "price": 130,
+      "duration": 50,
+      "description": "Zajęcia korekcyjne."
+    },
+    {
+      "name": "Stymulacja słuchowa IAS Johansen — pierwsze spotkanie",
+      "price": 320,
+      "duration": 55,
+      "description": "Pierwsze spotkanie w ramach stymulacji słuchowej IAS Johansen. Czas rezerwacji domyślny: 55 min (brak czasu w cenniku)."
+    },
+    {
+      "name": "Stymulacja słuchowa IAS Johansen — diagnoza etapowa",
+      "price": 220,
+      "duration": 55,
+      "description": "Diagnoza etapowa w ramach stymulacji słuchowej IAS Johansen. Czas rezerwacji domyślny: 55 min (brak czasu w cenniku)."
+    },
+    {
+      "name": "Wydanie opinii na piśmie",
+      "price": 150,
+      "duration": 55,
+      "description": "Widełki: 150–250 zł; domyślnie dolna granica. Czas rezerwacji domyślny: 55 min (brak czasu w cenniku)."
+    },
+    {
+      "name": "Nauka czytania i pisania 45 min",
+      "price": 150,
+      "duration": 45,
+      "description": "Zajęcia indywidualne."
+    },
+    {
+      "name": "Nauka czytania i pisania 60 min",
+      "price": 170,
+      "duration": 60,
+      "description": "Zajęcia indywidualne."
+    },
+    {
+      "name": "Diagnoza zaburzeń ze spektrum autyzmu — ASRS",
+      "price": 600,
+      "duration": 55,
+      "description": "Diagnoza przy użyciu kwestionariuszy ASRS. Czas rezerwacji domyślny: 55 min (brak czasu w cenniku)."
+    },
+    {
+      "name": "Mikropolaryzacja z terapią — 10 spotkań / 2600 zł",
+      "price": 2600,
+      "duration": 45,
+      "description": "Pakiet z terapią logopedyczną, neurologopedyczną lub pedagogiczną. Pełna cena 10 spotkań; czas jednego spotkania do 45 min. Strona zawiera dwa warianty cenowe bez objaśnienia różnicy."
+    },
+    {
+      "name": "Mikropolaryzacja z terapią — 10 spotkań / 2400 zł",
+      "price": 2400,
+      "duration": 45,
+      "description": "Pakiet z terapią logopedyczną, neurologopedyczną lub pedagogiczną. Pełna cena 10 spotkań; czas jednego spotkania do 45 min. Strona zawiera dwa warianty cenowe bez objaśnienia różnicy."
+    },
+    {
+      "name": "Mikropolaryzacja z psychoterapią — 10 spotkań",
+      "price": 2800,
+      "duration": 55,
+      "description": "Pełna cena pakietu 10 spotkań, nie pojedynczej wizyty. Czas rezerwacji domyślny: 55 min (brak czasu w cenniku)."
+    },
+    {
+      "name": "Mikropolaryzacja — wypożyczenie sprzętu",
+      "price": 2500,
+      "duration": 55,
+      "description": "Cena wypożyczenia sprzętu; cennik nie określa okresu wypożyczenia. Czas rezerwacji domyślny: 55 min (brak czasu w cenniku)."
+    },
+    {
+      "name": "Tomatis Infiniti — cykl 1",
+      "price": 3000,
+      "duration": 55,
+      "description": "Cena całego cyklu, nie pojedynczej wizyty. Cennik nie określa liczby i czasu spotkań. Czas rezerwacji domyślny: 55 min (brak czasu w cenniku)."
+    },
+    {
+      "name": "Tomatis Infiniti — cykl 2",
+      "price": 2900,
+      "duration": 55,
+      "description": "Cena całego cyklu, nie pojedynczej wizyty. Cennik nie określa liczby i czasu spotkań. Czas rezerwacji domyślny: 55 min (brak czasu w cenniku)."
+    },
+    {
+      "name": "Tomatis Infiniti — cykl 3",
+      "price": 2900,
+      "duration": 55,
+      "description": "Cena całego cyklu, nie pojedynczej wizyty. Cennik nie określa liczby i czasu spotkań. Czas rezerwacji domyślny: 55 min (brak czasu w cenniku)."
+    },
+    {
+      "name": "ADOS-2",
+      "price": 1000,
+      "duration": 55,
+      "description": "Badanie ADOS-2. Czas rezerwacji domyślny: 55 min (brak czasu w cenniku)."
+    }
+  ]
+}

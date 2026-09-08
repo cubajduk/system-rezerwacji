@@ -1,3 +1,3 @@
 package pl.fabrykaterapii.reservations.repository;
 import jakarta.persistence.LockModeType; import org.springframework.data.jpa.repository.*; import org.springframework.data.repository.query.Param; import pl.fabrykaterapii.reservations.domain.Specialist; import java.util.*;
-public interface SpecialistRepository extends JpaRepository<Specialist,String> { @Lock(LockModeType.PESSIMISTIC_WRITE) @Query("select s from Specialist s where s.id=:id") Optional<Specialist> findByIdForUpdate(@Param("id") String id); }
+public interface SpecialistRepository extends JpaRepository<Specialist,String> { @Lock(LockModeType.PESSIMISTIC_WRITE) @Query("select s from Specialist s where s.id=:id") Optional<Specialist> findByIdForUpdate(@Param("id") String id); boolean existsByColor(String color); boolean existsByColorAndIdNot(String color,String id); }
